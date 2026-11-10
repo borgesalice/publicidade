@@ -1,3 +1,11 @@
 {
-  "avisos": []
+  "avisos": [
+    {
+      "id": "01965d6e-9a7d-4057-8240-e8a7d860dc22",
+      "titulo": "Trabalho de branding hoje",
+      "texto": "trabalho de branding para apresentar hoje, o arquivo deve ser publicado até às 18h50.",
+      "importante": true,
+      "criadoEm": "2026-11-10T13:21:35.294Z"
+    }
+  ]
 }
