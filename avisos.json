@@ -6,6 +6,13 @@
       "texto": "trabalho de branding para apresentar hoje, o arquivo deve ser publicado até às 18h50.",
       "importante": true,
       "criadoEm": "2026-11-10T13:21:35.294Z"
+    },
+    {
+      "id": "776c0f8c-83f2-4ae4-92fd-82d7785311a7",
+      "titulo": "teste",
+      "texto": "teste de aviso",
+      "importante": false,
+      "criadoEm": "2026-11-10T13:22:08.503Z"
     }
   ]
 }
