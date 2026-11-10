@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Avisos da turma</title>
+<style>
+:root{--bg:#f7f7f5;--card:#fff;--tx:#1d1d1b;--mut:#6b6b66;--ln:#e3e3de;--ac:#2f6f5e;--acbg:#e5f0ec}
+@media(prefers-color-scheme:dark){:root{--bg:#161615;--card:#1f1f1d;--tx:#efefea;--mut:#a0a09a;--ln:#31312e;--ac:#7cc4ad;--acbg:#223630}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+main{max-width:640px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:1.5rem;margin:8px 0 20px}
+h2{font-size:1rem;color:var(--mut);margin:24px 0 8px;font-weight:600}
+.aviso{background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:14px 16px;margin-bottom:10px}
+.aviso.imp{border-color:var(--ac);background:var(--acbg)}
+.aviso h3{margin:0 0 4px;font-size:1.05rem}
+.aviso p{margin:0;white-space:pre-wrap}
+.aviso time{display:block;margin-top:8px;font-size:.85rem;color:var(--mut)}
+.msg{color:var(--mut)}
+</style>
+</head>
+<body>
+<main>
+<h1>Avisos da turma</h1>
+<div id="app"><p class="msg">Carregando…</p></div>
+</main>
+<script>
+const app = document.getElementById('app');
+
+function card(a) {
+  const d = document.createElement('article');
+  d.className = 'aviso' + (a.importante ? ' imp' : '');
+  const h = document.createElement('h3');
+  h.textContent = a.titulo;
+  d.append(h);
+  if (a.texto) {
+    const p = document.createElement('p');
+    p.textContent = a.texto;
+    d.append(p);
+  }
+  const t = document.createElement('time');
+  t.dateTime = a.criadoEm;
+  t.textContent = new Date(a.criadoEm).toLocaleString('pt-BR', {
+    dateStyle: 'short', timeStyle: 'short', timeZone: 'America/Sao_Paulo'
+  });
+  d.append(t);
+  return d;
+}
+
+function secao(titulo, lista) {
+  if (!lista.length) return null;
+  const s = document.createElement('section');
+  const h = document.createElement('h2');
+  h.textContent = titulo;
+  s.append(h);
+  lista.forEach(a => s.append(card(a)));
+  return s;
+}
+
+function aviso(texto) {
+  app.replaceChildren();
+  const p = document.createElement('p');
+  p.className = 'msg';
+  p.textContent = texto;
+  app.append(p);
+}
+
+fetch('avisos.json?t=' + Date.now())
+  .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+  .then(({ avisos }) => {
+    const l = [...avisos].sort((a, b) => b.criadoEm.localeCompare(a.criadoEm));
+    const blocos = [
+      secao('Importantes', l.filter(a => a.importante)),
+      secao('Recentes', l.filter(a => !a.importante))
+    ].filter(Boolean);
+    if (!blocos.length) return aviso('Nenhum aviso por enquanto.');
+    app.replaceChildren(...blocos);
+  })
+  .catch(() => aviso('Não foi possível carregar os avisos. Tente de novo em instantes.'));
+</script>
+</body>
+</html>
